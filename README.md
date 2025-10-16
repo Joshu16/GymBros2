@@ -1,169 +1,207 @@
 # GymBros - Gym Routine Tracker
 
-A mobile-optimized PWA for tracking gym routines and exercises with a beautiful dark mode interface inspired by iOS design.
+A modern, mobile-optimized Progressive Web App (PWA) for tracking gym routines and workout sessions. Built with React, Firebase, and designed with a dark theme inspired by iOS design principles.
 
-## Features
+## ✨ Features
 
-- 🏋️ **Routine Management**: Create and manage custom workout routines
-- 📊 **Exercise Tracking**: Track sets, reps, and RIR (Reps in Reserve) for each exercise
-- 🔄 **Session History**: View previous workout data as placeholders for new sessions
-- 📱 **PWA Support**: Install as a mobile app with offline capabilities
-- 🌙 **Dark Mode**: Beautiful dark theme optimized for mobile
-- 📤 **Data Export**: Export your workout data to CSV
-- 🔐 **Authentication**: Secure login with Google or email/password
-- ☁️ **Cloud Sync**: All data synced with Firebase
+### 🏋️ Routine Management
+- Create custom routines (e.g., "Upper A", "Upper B", "Lower A", "Lower B")
+- Each routine maintains independent exercise data
+- Exercises with same name in different routines are completely separate
 
-## Tech Stack
+### 📊 Exercise Tracking
+- **Complete exercise data**: Sets, Reps, RIR (Reps in Reserve), Weight, Notes
+- **Session memory**: Each routine remembers its last session data as placeholders
+- **Independent tracking**: Upper A and Upper B exercises are tracked separately
+
+### 📈 Session Management
+- **Session history**: View all previous workout sessions
+- **Progress tracking**: See completion rates and workout statistics
+- **Repeat sessions**: "Repeat last session" button for quick setup
+- **Real-time progress**: Live progress bar during workouts
+
+### 📤 Data Export
+- **CSV export**: Download all workout data in spreadsheet format
+- **Complete data**: Includes routine, exercise, sets, reps, RIR, weight, notes, completion status, and dates
+- **Google Drive integration**: Coming soon
+
+### 🎨 Design & UX
+- **Dark mode**: Modern dark theme (#121212 background)
+- **iOS-inspired design**: Clean, minimal interface with smooth animations
+- **Mobile-first**: Optimized for mobile devices with PWA support
+- **Responsive**: Works on all screen sizes
+
+## 🚀 Tech Stack
 
 - **Frontend**: React 18 + Vite
-- **Styling**: Custom CSS with iOS-inspired dark theme
+- **Styling**: Tailwind CSS
 - **Animations**: Framer Motion
-- **Backend**: Firebase (Authentication + Firestore)
-- **PWA**: Vite PWA Plugin
 - **Icons**: Lucide React
+- **Backend**: Firebase (Authentication + Firestore)
+- **PWA**: Service Worker + Manifest
 
-## Getting Started
+## 📱 PWA Features
 
-### Prerequisites
+- **Installable**: Add to home screen on mobile devices
+- **Offline support**: Basic offline functionality
+- **App-like experience**: Full-screen mode, no browser UI
+- **Fast loading**: Optimized bundle size and caching
 
-- Node.js 16+ 
-- npm or yarn
-- Firebase project
-
-### Installation
-
-1. Clone the repository:
-```bash
-git clone <repository-url>
-cd gymbros-app
-```
-
-2. Install dependencies:
-```bash
-npm install
-```
-
-3. Set up Firebase:
-   - Create a Firebase project at [console.firebase.google.com](https://console.firebase.google.com)
-   - Enable Authentication (Google + Email/Password)
-   - Create a Firestore database
-   - Copy your Firebase config
-
-4. Update Firebase configuration:
-   - Open `src/firebase/config.js`
-   - Replace the placeholder config with your Firebase project config
-
-5. Start the development server:
-```bash
-npm run dev
-```
-
-6. Open your browser and navigate to `http://localhost:5173`
-
-### Building for Production
-
-```bash
-npm run build
-```
-
-The built files will be in the `dist` directory, ready for deployment.
-
-## Project Structure
-
-```
-src/
-├── components/          # Reusable UI components
-│   ├── AuthGuard.jsx
-│   ├── LoadingSpinner.jsx
-│   └── ExportModal.jsx
-├── contexts/           # React contexts
-│   └── AuthContext.jsx
-├── firebase/           # Firebase configuration and services
-│   ├── config.js
-│   ├── auth.js
-│   └── database.js
-├── pages/              # Page components
-│   ├── LoginPage.jsx
-│   ├── Dashboard.jsx
-│   ├── RoutineDetail.jsx
-│   └── ExerciseSession.jsx
-├── App.jsx            # Main app component
-├── main.jsx           # App entry point
-└── index.css          # Global styles and Tailwind imports
-```
-
-## Usage
-
-### Creating Routines
-
-1. Sign in to your account
-2. Click "New Routine" on the dashboard
-3. Enter a routine name (e.g., "Upper A", "Push Day")
-4. Add exercises to your routine
-
-### Adding Exercises
-
-1. Open a routine
-2. Click "Add Exercise"
-3. Enter exercise details:
-   - Name (e.g., "Bench Press")
-   - Sets (number of sets)
-   - Reps (target repetitions)
-   - RIR (Reps in Reserve)
-
-### Starting a Workout Session
-
-1. Click "Start Session" on any routine
-2. The app will show placeholders from your last session
-3. Update the values as needed
-4. Mark exercises as completed
-5. Save your session when done
-
-### Data Export
-
-1. Click the download icon in the header
-2. Choose CSV export
-3. Download your workout data
-
-## Firebase Database Structure
+## 🗄️ Database Structure
 
 ```
 users/{userId}/
-├── routines/{routineId}/
-│   ├── name: string
-│   ├── description: string
-│   ├── createdAt: timestamp
-│   ├── updatedAt: timestamp
-│   └── exercises/{exerciseId}/
-│       ├── name: string
-│       ├── sets: number
-│       ├── reps: number
-│       ├── rir: number
-│       ├── createdAt: timestamp
-│       └── updatedAt: timestamp
-│   └── sessions/{sessionId}/
-│       ├── exercises: array
-│       ├── completedAt: timestamp
-│       └── createdAt: timestamp
+  ├── routines/{routineId}/
+  │   ├── exercises/{exerciseId}/
+  │   └── sessions/{sessionId}/
 ```
 
-## Customization
+Each session stores:
+- Exercise details (sets, reps, RIR, weight, notes)
+- Completion status
+- Timestamps
+- Routine information
 
-### Colors and Theme
+## 🛠️ Installation & Setup
 
-The app uses a custom dark theme with iOS-inspired design. You can modify the color palette by updating the CSS custom properties in `src/index.css`.
+1. **Clone the repository**
+   ```bash
+   git clone https://github.com/Joshu16/GymBros2.git
+   cd GymBros2
+   ```
 
-### Styling
+2. **Install dependencies**
+   ```bash
+   npm install
+   ```
 
-All styles use custom CSS with utility classes defined in `src/index.css`. The design follows iOS-inspired principles with:
+3. **Firebase Setup**
+   - Create a Firebase project
+   - Enable Authentication (Google + Email/Password)
+   - Enable Firestore Database
+   - Update `src/firebase/config.js` with your Firebase config
 
-- Rounded corners (rounded-2xl for cards, rounded-xl for inputs)
-- Generous spacing and padding
-- Smooth transitions and animations
-- Glass morphism effects
-- Dark mode optimized for mobile devices
+4. **Deploy Firestore Rules**
+   ```bash
+   npm run deploy-firebase
+   ```
 
-## Contributing
+5. **Start development server**
+   ```bash
+   npm run dev
+   ```
+
+## 🔥 Firebase Configuration
+
+### Authentication
+- Google Sign-In enabled
+- Email/Password authentication
+- User management and session handling
+
+### Firestore Rules
+```javascript
+rules_version = '2';
+service cloud.firestore {
+  match /databases/{database}/documents {
+    match /users/{userId}/{document=**} {
+      allow read, write: if request.auth != null && request.auth.uid == userId;
+    }
+  }
+}
+```
+
+## 📊 Usage
+
+### Creating Routines
+1. Click "New Routine" on the dashboard
+2. Enter routine name (e.g., "Upper A")
+3. Add exercises with sets, reps, RIR, weight, and notes
+
+### Workout Sessions
+1. Select a routine and click "Start Session"
+2. Previous session data appears as placeholders
+3. Modify values as needed
+4. Mark exercises as completed
+5. Save session when finished
+
+### Viewing History
+1. Go to routine detail page
+2. Click the history icon
+3. View all previous sessions with complete details
+
+### Exporting Data
+1. Click the export icon in the header
+2. Choose CSV export
+3. Download complete workout data
+
+## 🎯 Key Features Explained
+
+### Independent Routine Data
+- Each routine maintains its own exercise database
+- "Bench Press" in Upper A is completely separate from "Bench Press" in Upper B
+- Last session data is remembered per routine, not globally
+
+### Session Memory
+- When starting a new session, the app shows your last performance as placeholders
+- You can modify these values or keep them the same
+- This helps track progression and maintain consistency
+
+### Complete Exercise Tracking
+- **Sets & Reps**: Traditional workout tracking
+- **RIR (Reps in Reserve)**: How many more reps you could have done
+- **Weight**: Track strength progression
+- **Notes**: Add personal notes for each exercise
+
+## 🔧 Development
+
+### Available Scripts
+- `npm run dev` - Start development server
+- `npm run build` - Build for production
+- `npm run preview` - Preview production build
+- `npm run lint` - Run ESLint
+- `npm run deploy-firebase` - Deploy Firestore rules
+
+### Project Structure
+```
+src/
+├── components/          # Reusable UI components
+├── contexts/           # React contexts (Auth)
+├── firebase/           # Firebase configuration and functions
+├── pages/              # Main application pages
+│   ├── Dashboard.jsx
+│   ├── RoutineDetail.jsx
+│   ├── ExerciseSession.jsx
+│   ├── SessionHistory.jsx
+│   └── LoginPage.jsx
+└── App.jsx             # Main app component
+```
+
+## 🚀 Deployment
+
+### Vercel (Recommended)
+1. Connect your GitHub repository to Vercel
+2. Set environment variables if needed
+3. Deploy automatically on push
+
+### Netlify
+1. Build the project: `npm run build`
+2. Deploy the `dist` folder to Netlify
+3. Configure redirects for SPA routing
+
+### Firebase Hosting
+1. Install Firebase CLI: `npm install -g firebase-tools`
+2. Login: `firebase login`
+3. Initialize: `firebase init hosting`
+4. Deploy: `firebase deploy`
+
+## 📱 Mobile Installation
+
+1. Open the app in your mobile browser
+2. Look for "Add to Home Screen" option
+3. Install as a PWA
+4. Enjoy app-like experience
+
+## 🤝 Contributing
 
 1. Fork the repository
 2. Create a feature branch
@@ -171,10 +209,17 @@ All styles use custom CSS with utility classes defined in `src/index.css`. The d
 4. Test thoroughly
 5. Submit a pull request
 
-## License
+## 📄 License
 
-This project is licensed under the MIT License.
+This project is licensed under the MIT License - see the LICENSE file for details.
 
-## Support
+## 🙏 Acknowledgments
 
-For support or questions, please open an issue on GitHub.
+- Design inspired by Apple Fitness and Notion
+- Icons by Lucide React
+- Animations by Framer Motion
+- Built with React and Firebase
+
+---
+
+**GymBros** - Track your gym routines with ease! 💪
