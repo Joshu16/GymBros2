@@ -22,7 +22,16 @@ export const AuthProvider = ({ children }) => {
       setLoading(false);
     });
 
-    return unsubscribe;
+    // Timeout para evitar que se quede cargando indefinidamente
+    const timeout = setTimeout(() => {
+      console.log('Auth timeout reached, setting loading to false');
+      setLoading(false);
+    }, 5000);
+
+    return () => {
+      unsubscribe();
+      clearTimeout(timeout);
+    };
   }, []);
 
   const value = {
@@ -33,7 +42,7 @@ export const AuthProvider = ({ children }) => {
 
   return (
     <AuthContext.Provider value={value}>
-      {!loading && children}
+      {children}
     </AuthContext.Provider>
   );
 };

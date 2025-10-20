@@ -1,5 +1,4 @@
 import React from 'react';
-import { motion } from 'framer-motion';
 
 export const LoadingSpinner = ({ size = 'md', className = '' }) => {
   const sizeClasses = {
@@ -10,15 +9,9 @@ export const LoadingSpinner = ({ size = 'md', className = '' }) => {
   };
 
   return (
-    <div className={`flex items-center justify-center ${className}`}>
-      <motion.div
-        className={`${sizeClasses[size]} border-2 border-gray-700 border-t-primary-50 rounded-full`}
-        animate={{ rotate: 360 }}
-        transition={{
-          duration: 1,
-          repeat: Infinity,
-          ease: 'linear'
-        }}
+    <div className={`flex items-center justify-center min-h-screen bg-gray-900 ${className}`}>
+      <div
+        className={`${sizeClasses[size]} border-2 border-gray-700 border-t-white rounded-full animate-spin`}
       />
     </div>
   );

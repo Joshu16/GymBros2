@@ -1,5 +1,4 @@
 import React, { useState, useEffect } from 'react';
-import { motion } from 'framer-motion';
 import { Dumbbell, Mail, Lock, Eye, EyeOff } from 'lucide-react';
 import { signInWithGoogle, signInWithEmail, signUpWithEmail } from '../firebase/auth';
 import { useAuth } from '../contexts/AuthContext';
@@ -63,33 +62,18 @@ export const LoginPage = () => {
 
   return (
     <div className="min-h-screen bg-gray-900 flex items-center justify-center px-4">
-      <motion.div
-        initial={{ opacity: 0, y: 20 }}
-        animate={{ opacity: 1, y: 0 }}
-        transition={{ duration: 0.5 }}
-        className="w-full max-w-md"
-      >
+      <div className="w-full max-w-md">
         {/* Logo and Title */}
         <div className="text-center mb-8">
-          <motion.div
-            initial={{ scale: 0 }}
-            animate={{ scale: 1 }}
-            transition={{ delay: 0.2, type: 'spring', stiffness: 200 }}
-            className="inline-flex items-center justify-center w-16 h-16 bg-white rounded-2xl mb-4"
-          >
+          <div className="inline-flex items-center justify-center w-16 h-16 bg-white rounded-2xl mb-4">
             <Dumbbell className="w-8 h-8 text-gray-900" />
-          </motion.div>
+          </div>
           <h1 className="text-3xl font-bold text-white mb-2">GymBros</h1>
           <p className="text-gray-400">Track your gym routines with ease</p>
         </div>
 
         {/* Auth Form */}
-        <motion.div
-          initial={{ opacity: 0, y: 20 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ delay: 0.3, duration: 0.5 }}
-          className="card"
-        >
+        <div className="card">
           <div className="mb-6">
             <div className="flex bg-gray-700 rounded-xl p-1">
               <button
@@ -116,13 +100,9 @@ export const LoginPage = () => {
           </div>
 
           {error && (
-            <motion.div
-              initial={{ opacity: 0, scale: 0.95 }}
-              animate={{ opacity: 1, scale: 1 }}
-              className="mb-4 p-3 bg-red-900/20 border border-red-800 rounded-xl text-red-300 text-sm"
-            >
+            <div className="mb-4 p-3 bg-red-900/20 border border-red-800 rounded-xl text-red-300 text-sm">
               {error}
-            </motion.div>
+            </div>
           )}
 
           <form onSubmit={handleEmailAuth} className="space-y-4">
@@ -217,8 +197,8 @@ export const LoginPage = () => {
               Google
             </button>
           </div>
-        </motion.div>
-      </motion.div>
+        </div>
+      </div>
     </div>
   );
 };

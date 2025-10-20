@@ -178,7 +178,23 @@ src/
 
 ## 🚀 Deployment
 
-### Vercel (Recommended)
+### GitHub Pages (Automático con GitHub Actions)
+1. **Configurar GitHub Pages**:
+   - Ve a Settings > Pages en tu repositorio
+   - Selecciona "GitHub Actions" como fuente
+   
+2. **Despliegue automático**:
+   - El workflow `.github/workflows/deploy.yml` se ejecuta automáticamente
+   - Cada push a `master` despliega la app automáticamente
+   - La app estará disponible en: `https://tuusuario.github.io/GymBros2/`
+
+3. **Configuración manual** (si prefieres):
+   ```bash
+   npm run build
+   npm run deploy
+   ```
+
+### Vercel (Recomendado para desarrollo)
 1. Connect your GitHub repository to Vercel
 2. Set environment variables if needed
 3. Deploy automatically on push
