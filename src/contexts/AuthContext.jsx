@@ -16,6 +16,7 @@ export const AuthProvider = ({ children }) => {
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
+    console.log('AuthContext: Initializing auth listener');
     const unsubscribe = onAuthStateChange((user) => {
       console.log('Auth state changed:', user);
       setUser(user);
@@ -26,7 +27,7 @@ export const AuthProvider = ({ children }) => {
     const timeout = setTimeout(() => {
       console.log('Auth timeout reached, setting loading to false');
       setLoading(false);
-    }, 5000);
+    }, 10000);
 
     return () => {
       unsubscribe();
