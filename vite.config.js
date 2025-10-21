@@ -4,7 +4,7 @@ import { VitePWA } from 'vite-plugin-pwa'
 
 // https://vite.dev/config/
 export default defineConfig({
-  base: process.env.NODE_ENV === 'production' ? '/GymBros2/' : '/',
+  base: '/',
   plugins: [
     react(),
     VitePWA({
@@ -18,8 +18,8 @@ export default defineConfig({
         background_color: '#121212',
         display: 'standalone',
         orientation: 'portrait',
-        scope: process.env.NODE_ENV === 'production' ? '/GymBros2/' : '/',
-        start_url: process.env.NODE_ENV === 'production' ? '/GymBros2/' : '/',
+        scope: '/',
+        start_url: '/',
         icons: [
           {
             src: 'vite.svg',
