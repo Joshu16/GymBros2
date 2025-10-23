@@ -101,35 +101,31 @@ export const Dashboard = () => {
   }
 
   return (
-    <div className="min-h-screen bg-gray-900">
+    <div className="min-h-screen bg-bg-primary">
       {/* Header */}
-      <motion.header
-        initial={{ opacity: 0, y: -20 }}
-        animate={{ opacity: 1, y: 0 }}
-        className="sticky top-0 z-10 bg-gray-900/90 backdrop-blur-xl border-b border-gray-700/50 shadow-lg"
-      >
+      <header className="sticky top-0 z-10 bg-bg-primary/90 backdrop-blur-xl border-b border-border-secondary shadow-lg">
         <div className="px-4 py-5">
           <div className="flex items-center justify-between">
             <div className="flex items-center gap-4">
-              <div className="w-12 h-12 bg-gradient-to-br from-blue-600 to-purple-600 rounded-2xl flex items-center justify-center shadow-lg">
-                <Dumbbell className="w-7 h-7 text-white" />
+              <div className="w-12 h-12 bg-gradient-to-br from-primary-600 to-primary-700 rounded-2xl flex items-center justify-center shadow-lg">
+                <Dumbbell className="w-7 h-7 text-text-primary" />
               </div>
               <div>
-                <h1 className="text-2xl font-bold text-white">GymBros</h1>
-                <p className="text-sm text-gray-400 font-medium">Welcome back, {user?.displayName || 'Champion'}!</p>
+                <h1 className="text-2xl font-bold text-text-primary">GymBros</h1>
+                <p className="text-sm text-text-muted font-medium">Welcome back, {user?.displayName || 'Champion'}!</p>
               </div>
             </div>
             <div className="flex items-center gap-2">
               <button
                 onClick={() => setShowExportModal(true)}
-                className="p-2.5 text-white bg-gray-800 hover:bg-gray-700 rounded-lg transition-all duration-200 border border-gray-600 hover:border-gray-500 shadow-lg"
+                className="p-2.5 text-text-primary bg-bg-secondary hover:bg-bg-tertiary rounded-lg transition-all duration-200 border border-border-primary hover:border-border-primary shadow-lg"
                 title="Export data"
               >
                 <Download className="w-5 h-5" />
               </button>
               <button
                 onClick={handleLogout}
-                className="p-2.5 text-white bg-gray-800 hover:bg-red-600 hover:text-white rounded-lg transition-all duration-200 border border-gray-600 hover:border-red-500 shadow-lg"
+                className="p-2.5 text-text-primary bg-bg-secondary hover:bg-error-600 hover:text-text-primary rounded-lg transition-all duration-200 border border-border-primary hover:border-error-600 shadow-lg"
                 title="Logout"
               >
                 <LogOut className="w-5 h-5" />
@@ -137,55 +133,40 @@ export const Dashboard = () => {
             </div>
           </div>
         </div>
-      </motion.header>
+      </header>
 
       {/* Main Content */}
       <main className="px-4 py-6">
         {/* Stats Cards */}
-        <motion.div
-          initial={{ opacity: 0, y: 20 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ delay: 0.1 }}
-          className="grid grid-cols-2 gap-6 mb-8"
-        >
-          <motion.div 
-            className="card hover:shadow-xl hover:shadow-blue-500/10 transition-all duration-300 border border-gray-700/50 hover:border-blue-500/30"
-            whileHover={{ scale: 1.02 }}
-          >
+        <div className="grid grid-cols-2 gap-6 mb-8">
+          <div className="card hover:shadow-xl hover:shadow-primary-500/10 transition-all duration-300 border border-border-secondary hover:border-primary-500/30">
             <div className="flex items-center gap-4">
-              <div className="w-12 h-12 bg-gradient-to-br from-blue-600/20 to-blue-500/30 rounded-2xl flex items-center justify-center shadow-lg">
-                <Dumbbell className="w-6 h-6 text-blue-400" />
+              <div className="w-12 h-12 bg-gradient-to-br from-primary-600/20 to-primary-500/30 rounded-2xl flex items-center justify-center shadow-lg">
+                <Dumbbell className="w-6 h-6 text-primary-400" />
               </div>
               <div>
-                <p className="text-3xl font-bold text-white">{routines.length}</p>
-                <p className="text-sm text-gray-400 font-medium">Active Routines</p>
+                <p className="text-3xl font-bold text-text-primary">{routines.length}</p>
+                <p className="text-sm text-text-muted font-medium">Active Routines</p>
               </div>
             </div>
-          </motion.div>
-          <motion.div 
-            className="card hover:shadow-xl hover:shadow-green-500/10 transition-all duration-300 border border-gray-700/50 hover:border-green-500/30"
-            whileHover={{ scale: 1.02 }}
-          >
+          </div>
+          <div className="card hover:shadow-xl hover:shadow-success-500/10 transition-all duration-300 border border-border-secondary hover:border-success-500/30">
             <div className="flex items-center gap-4">
-              <div className="w-12 h-12 bg-gradient-to-br from-green-600/20 to-green-500/30 rounded-2xl flex items-center justify-center shadow-lg">
-                <Calendar className="w-6 h-6 text-green-400" />
+              <div className="w-12 h-12 bg-gradient-to-br from-success-600/20 to-success-500/30 rounded-2xl flex items-center justify-center shadow-lg">
+                <Calendar className="w-6 h-6 text-success-500" />
               </div>
               <div>
-                <p className="text-3xl font-bold text-white">0</p>
-                <p className="text-sm text-gray-400 font-medium">Sessions Today</p>
+                <p className="text-3xl font-bold text-text-primary">0</p>
+                <p className="text-sm text-text-muted font-medium">Sessions Today</p>
               </div>
             </div>
-          </motion.div>
-        </motion.div>
+          </div>
+        </div>
 
         {/* Routines Section */}
-        <motion.div
-          initial={{ opacity: 0, y: 20 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ delay: 0.2 }}
-        >
+        <div>
           <div className="flex items-center justify-between mb-6">
-            <h2 className="text-xl font-bold text-white">Your Routines</h2>
+            <h2 className="text-xl font-bold text-text-primary">Your Routines</h2>
             <button
               onClick={() => setShowCreateModal(true)}
               className="btn-primary flex items-center gap-2"
@@ -196,16 +177,12 @@ export const Dashboard = () => {
           </div>
 
           {routines.length === 0 ? (
-            <motion.div 
-              initial={{ opacity: 0, y: 20 }}
-              animate={{ opacity: 1, y: 0 }}
-              className="text-center py-16"
-            >
-              <div className="w-20 h-20 bg-gradient-to-br from-blue-600/20 to-purple-600/20 rounded-3xl flex items-center justify-center mx-auto mb-6 shadow-lg">
-                <Dumbbell className="w-10 h-10 text-blue-400" />
+            <div className="text-center py-16">
+              <div className="w-20 h-20 bg-gradient-to-br from-primary-600/20 to-primary-700/20 rounded-3xl flex items-center justify-center mx-auto mb-6 shadow-lg">
+                <Dumbbell className="w-10 h-10 text-primary-400" />
               </div>
-              <h3 className="text-2xl font-bold text-white mb-3">Ready to get started?</h3>
-              <p className="text-gray-400 mb-8 max-w-md mx-auto leading-relaxed">
+              <h3 className="text-2xl font-bold text-text-primary mb-3">Ready to get started?</h3>
+              <p className="text-text-muted mb-8 max-w-md mx-auto leading-relaxed">
                 Create your first workout routine and start tracking your fitness journey with GymBros
               </p>
               <button
@@ -215,28 +192,25 @@ export const Dashboard = () => {
                 <Plus className="w-5 h-5" />
                 Create Your First Routine
               </button>
-            </motion.div>
+            </div>
           ) : (
             <div className="grid gap-4">
               {routines.map((routine, index) => (
-                <motion.div
+                <div
                   key={routine.id}
-                  initial={{ opacity: 0, y: 20 }}
-                  animate={{ opacity: 1, y: 0 }}
-                  transition={{ delay: 0.1 * index }}
-                  className="card cursor-pointer group hover:bg-gray-700/50 hover:shadow-xl hover:shadow-blue-500/10 transition-all duration-300 border border-gray-700/50 hover:border-gray-600/50"
+                  className="card cursor-pointer group hover:bg-bg-tertiary/50 hover:shadow-xl hover:shadow-primary-500/10 transition-all duration-300 border border-border-secondary hover:border-border-primary"
                   onClick={() => navigate(`/routine/${routine.id}`)}
                 >
                   <div className="flex items-center justify-between">
                     <div className="flex items-center gap-4">
-                      <div className="w-14 h-14 bg-gradient-to-br from-blue-600/20 to-purple-600/20 rounded-2xl flex items-center justify-center group-hover:from-blue-500/30 group-hover:to-purple-500/30 transition-all duration-300 shadow-lg">
-                        <Dumbbell className="w-7 h-7 text-blue-400 group-hover:text-blue-300 transition-colors" />
+                      <div className="w-14 h-14 bg-gradient-to-br from-primary-600/20 to-primary-700/20 rounded-2xl flex items-center justify-center group-hover:from-primary-500/30 group-hover:to-primary-600/30 transition-all duration-300 shadow-lg">
+                        <Dumbbell className="w-7 h-7 text-primary-400 group-hover:text-primary-300 transition-colors" />
                       </div>
                       <div>
-                        <h3 className="font-bold text-white group-hover:text-gray-100 transition-colors text-lg">
+                        <h3 className="font-bold text-text-primary group-hover:text-text-secondary transition-colors text-lg">
                           {routine.name}
                         </h3>
-                        <p className="text-sm text-gray-400 group-hover:text-gray-300 transition-colors">
+                        <p className="text-sm text-text-muted group-hover:text-text-secondary transition-colors">
                           {routine.exercises?.length || 0} exercises • Created {routine.createdAt ? new Date(routine.createdAt.seconds * 1000).toLocaleDateString() : 'recently'}
                         </p>
                       </div>
@@ -247,7 +221,7 @@ export const Dashboard = () => {
                           e.stopPropagation();
                           navigate(`/routine/${routine.id}/session`);
                         }}
-                        className="px-4 py-2 bg-white text-gray-900 rounded-lg text-sm font-semibold hover:bg-gray-100 transition-all duration-200 shadow-lg hover:shadow-xl transform hover:scale-105"
+                        className="px-4 py-2 bg-text-primary text-text-inverse rounded-lg text-sm font-semibold hover:bg-secondary-100 transition-all duration-200 shadow-lg hover:shadow-xl transform hover:scale-105"
                       >
                         Start Session
                       </button>
@@ -256,39 +230,34 @@ export const Dashboard = () => {
                           e.stopPropagation();
                           handleDeleteRoutine(routine.id);
                         }}
-                        className="p-2.5 text-white bg-gray-800 hover:bg-red-600 hover:text-white rounded-lg transition-all duration-200 border border-gray-600 hover:border-red-500 shadow-lg"
+                        className="p-2.5 text-text-primary bg-bg-secondary hover:bg-error-600 hover:text-text-primary rounded-lg transition-all duration-200 border border-border-primary hover:border-error-600 shadow-lg"
                         title="Delete routine"
                       >
                         <Trash2 className="w-4 h-4" />
                       </button>
                     </div>
                   </div>
-                </motion.div>
+                </div>
               ))}
             </div>
           )}
-        </motion.div>
+        </div>
       </main>
 
       {/* Create Routine Modal */}
       {showCreateModal && (
         <div className="fixed inset-0 bg-black/60 backdrop-blur-sm flex items-center justify-center p-4 z-50">
-          <motion.div
-            initial={{ opacity: 0, scale: 0.9, y: 20 }}
-            animate={{ opacity: 1, scale: 1, y: 0 }}
-            exit={{ opacity: 0, scale: 0.9, y: 20 }}
-            className="card w-full max-w-md border border-gray-700/50 shadow-2xl"
-          >
+          <div className="card w-full max-w-md border border-border-secondary shadow-2xl">
             <div className="text-center mb-6">
-              <div className="w-16 h-16 bg-gradient-to-br from-blue-600/20 to-purple-600/20 rounded-2xl flex items-center justify-center mx-auto mb-4">
-                <Plus className="w-8 h-8 text-blue-400" />
+              <div className="w-16 h-16 bg-gradient-to-br from-primary-600/20 to-primary-700/20 rounded-2xl flex items-center justify-center mx-auto mb-4">
+                <Plus className="w-8 h-8 text-primary-400" />
               </div>
-              <h3 className="text-2xl font-bold text-white mb-2">Create New Routine</h3>
-              <p className="text-gray-400">Give your workout routine a name</p>
+              <h3 className="text-2xl font-bold text-text-primary mb-2">Create New Routine</h3>
+              <p className="text-text-muted">Give your workout routine a name</p>
             </div>
             <form onSubmit={handleCreateRoutine}>
               <div className="mb-6">
-                <label className="block text-sm font-semibold text-gray-300 mb-3">
+                <label className="block text-sm font-semibold text-text-secondary mb-3">
                   Routine Name
                 </label>
                 <input
@@ -316,7 +285,7 @@ export const Dashboard = () => {
                 >
                   {isCreatingRoutine ? (
                     <>
-                      <div className="animate-spin w-5 h-5 border-2 border-gray-900 border-t-transparent rounded-full"></div>
+                      <div className="animate-spin w-5 h-5 border-2 border-text-inverse border-t-transparent rounded-full"></div>
                       Creating...
                     </>
                   ) : (
@@ -328,7 +297,7 @@ export const Dashboard = () => {
                 </button>
               </div>
             </form>
-          </motion.div>
+          </div>
         </div>
       )}
 

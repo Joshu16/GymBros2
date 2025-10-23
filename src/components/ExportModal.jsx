@@ -1,5 +1,4 @@
 import React, { useState } from 'react';
-import { motion } from 'framer-motion';
 import { Download, X, FileText } from 'lucide-react';
 import { useAuth } from '../contexts/AuthContext';
 import { getRoutines, getSessions } from '../firebase/database';
@@ -84,11 +83,7 @@ export const ExportModal = ({ onClose, routines }) => {
 
   return (
     <div className="fixed inset-0 bg-black/50 flex items-center justify-center p-4 z-50">
-      <motion.div
-        initial={{ opacity: 0, scale: 0.95 }}
-        animate={{ opacity: 1, scale: 1 }}
-        className="card w-full max-w-md"
-      >
+      <div className="card w-full max-w-md">
         <div className="flex items-center justify-between mb-6">
           <h3 className="text-lg font-semibold text-white">Export Data</h3>
           <button
@@ -154,7 +149,7 @@ export const ExportModal = ({ onClose, routines }) => {
             Close
           </button>
         </div>
-      </motion.div>
+      </div>
     </div>
   );
 };

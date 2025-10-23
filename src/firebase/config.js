@@ -1,6 +1,7 @@
 import { initializeApp } from 'firebase/app';
 import { getAuth } from 'firebase/auth';
 import { getFirestore } from 'firebase/firestore';
+import { getCurrentDomain } from './domains';
 
 const firebaseConfig = {
   apiKey: "AIzaSyCRhNNuJ4qu0xJNQsX5-cXdCVko8CPkr3M",
@@ -19,5 +20,8 @@ export const auth = getAuth(app);
 
 // Initialize Cloud Firestore and get a reference to the service
 export const db = getFirestore(app);
+
+// Log current domain for debugging
+console.log('Firebase initialized for domain:', getCurrentDomain());
 
 export default app;

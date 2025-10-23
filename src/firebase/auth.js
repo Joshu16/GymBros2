@@ -12,13 +12,34 @@ const googleProvider = new GoogleAuthProvider();
 
 export const signInWithGoogle = async () => {
   try {
+    // Add additional scopes if needed
+    googleProvider.addScope('email');
+    googleProvider.addScope('profile');
+    
     const result = await signInWithPopup(auth, googleProvider);
     console.log('Google sign in successful:', result.user);
     return result.user;
   } catch (error) {
     console.error('Error signing in with Google:', error);
     console.error('Error details:', error.code, error.message);
-    throw error;
+    
+    // Provide more specific error messages
+    let errorMessage = 'Error signing in with Google. Please try again.';
+    
+    if (error.code === 'auth/popup-closed-by-user') {
+      errorMessage = 'Sign-in popup was closed. Please try again.';
+    } else if (error.code === 'auth/popup-blocked') {
+      errorMessage = 'Popup was blocked by your browser. Please allow popups for this site and try again.';
+    } else if (error.code === 'auth/network-request-failed') {
+      errorMessage = 'Network error. Please check your internet connection and try again.';
+    } else if (error.code === 'auth/unauthorized-domain') {
+      errorMessage = 'This domain is not authorized for Google sign-in. Please contact support.';
+    }
+    
+    const enhancedError = new Error(errorMessage);
+    enhancedError.code = error.code;
+    enhancedError.originalError = error;
+    throw enhancedError;
   }
 };
 

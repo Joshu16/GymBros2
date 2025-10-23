@@ -1,5 +1,4 @@
 import React, { useState, useEffect } from 'react';
-import { motion } from 'framer-motion';
 import { useParams, useNavigate } from 'react-router-dom';
 import { ArrowLeft, Check, RotateCcw, Save } from 'lucide-react';
 import { useAuth } from '../contexts/AuthContext';
@@ -48,16 +47,14 @@ export const ExerciseSession = () => {
       exercisesData.forEach(exercise => {
         const lastExerciseData = lastSessionData?.exercises?.find(e => e.exerciseId === exercise.id);
         initialSessionData[exercise.id] = {
-          sets: lastExerciseData?.sets || exercise.sets,
+          sets: exercise.sets,
           reps: lastExerciseData?.reps || exercise.reps,
+          weight: lastExerciseData?.weight || exercise.weight,
           rir: lastExerciseData?.rir || exercise.rir,
-          weight: lastExerciseData?.weight || exercise.weight || 0,
-          notes: lastExerciseData?.notes || exercise.notes || '',
-          completed: false
+          notes: ''
         };
       });
       setSessionData(initialSessionData);
-      
     } catch (error) {
       console.error('Error loading session data:', error);
     } finally {
@@ -76,77 +73,54 @@ export const ExerciseSession = () => {
   };
 
   const toggleExerciseComplete = (exerciseId) => {
-    const isCompleted = completedExercises.has(exerciseId);
-    if (isCompleted) {
-      setCompletedExercises(prev => {
-        const newSet = new Set(prev);
-        newSet.delete(exerciseId);
-        return newSet;
-      });
+    const newCompleted = new Set(completedExercises);
+    if (newCompleted.has(exerciseId)) {
+      newCompleted.delete(exerciseId);
     } else {
-      setCompletedExercises(prev => new Set([...prev, exerciseId]));
+      newCompleted.add(exerciseId);
+    }
+    setCompletedExercises(newCompleted);
+  };
+
+  const resetExercise = (exerciseId) => {
+    const exercise = exercises.find(e => e.id === exerciseId);
+    if (exercise) {
+      updateExerciseData(exerciseId, 'reps', exercise.reps);
+      updateExerciseData(exerciseId, 'weight', exercise.weight);
+      updateExerciseData(exerciseId, 'rir', exercise.rir);
+      updateExerciseData(exerciseId, 'notes', '');
     }
   };
 
-  const repeatLastSession = () => {
-    if (!lastSession) return;
-    
-    const newSessionData = {};
-    exercises.forEach(exercise => {
-      const lastExerciseData = lastSession.exercises?.find(e => e.exerciseId === exercise.id);
-      if (lastExerciseData) {
-        newSessionData[exercise.id] = {
-          sets: lastExerciseData.sets,
-          reps: lastExerciseData.reps,
-          rir: lastExerciseData.rir,
-          weight: lastExerciseData.weight || 0,
-          notes: lastExerciseData.notes || '',
-          completed: false
-        };
-      }
-    });
-    setSessionData(newSessionData);
-    setCompletedExercises(new Set());
-  };
-
-  const saveSession = async () => {
+  const handleSaveSession = async () => {
     try {
       setSaving(true);
       
-      const sessionPayload = {
-        routineId: id,
-        routineName: routine.name,
-        exercises: Object.entries(sessionData).map(([exerciseId, data]) => {
-          const exercise = exercises.find(e => e.id === exerciseId);
-          return {
-            exerciseId,
-            exerciseName: exercise.name,
-            sets: data.sets,
-            reps: data.reps,
-            rir: data.rir,
-            weight: data.weight || 0,
-            notes: data.notes || '',
-            completed: data.completed
-          };
-        }),
+      const sessionExercises = exercises.map(exercise => ({
+        exerciseId: exercise.id,
+        name: exercise.name,
+        sets: sessionData[exercise.id]?.sets || exercise.sets,
+        reps: sessionData[exercise.id]?.reps || exercise.reps,
+        weight: sessionData[exercise.id]?.weight || exercise.weight,
+        rir: sessionData[exercise.id]?.rir || exercise.rir,
+        notes: sessionData[exercise.id]?.notes || ''
+      }));
+
+      await createSession(user.uid, id, {
+        exercises: sessionExercises,
         completedAt: new Date(),
-        totalExercises: exercises.length,
-        completedExercises: completedExercises.size
-      };
-      
-      await createSession(user.uid, id, sessionPayload);
-      
-      // Navigate back to routine detail
+        duration: 0 // Could calculate actual duration
+      });
+
+      alert('Session saved successfully!');
       navigate(`/routine/${id}`);
-      
     } catch (error) {
       console.error('Error saving session:', error);
+      alert('Error saving session. Please try again.');
     } finally {
       setSaving(false);
     }
   };
-
-  const allExercisesCompleted = completedExercises.size === exercises.length;
 
   if (loading) {
     return (
@@ -156,211 +130,181 @@ export const ExerciseSession = () => {
     );
   }
 
-  if (!routine) {
-    return (
-      <div className="min-h-screen flex items-center justify-center">
-        <div className="text-center">
-          <h2 className="text-xl font-semibold text-white mb-2">Routine not found</h2>
-          <button
-            onClick={() => navigate('/')}
-            className="btn-primary"
-          >
-            Back to Dashboard
-          </button>
-        </div>
-      </div>
-    );
-  }
-
   return (
-    <div className="min-h-screen bg-gray-900">
+    <div className="min-h-screen bg-bg-primary">
       {/* Header */}
-      <motion.header
-        initial={{ opacity: 0, y: -20 }}
-        animate={{ opacity: 1, y: 0 }}
-        className="sticky top-0 z-10 bg-gray-900/80 backdrop-blur-xl border-b border-gray-800"
-      >
-        <div className="px-4 py-4">
+      <header className="sticky top-0 z-10 bg-bg-primary/90 backdrop-blur-xl border-b border-border-secondary shadow-lg">
+        <div className="px-4 py-5">
           <div className="flex items-center gap-4">
             <button
               onClick={() => navigate(`/routine/${id}`)}
-              className="p-2 text-gray-400 hover:text-white transition-colors"
+              className="p-2 text-text-primary hover:bg-bg-secondary rounded-lg transition-colors"
             >
               <ArrowLeft className="w-6 h-6" />
             </button>
-            <div className="flex-1">
-              <h1 className="text-xl font-bold text-white">{routine.name}</h1>
-              <p className="text-sm text-gray-400">
+            <div>
+              <h1 className="text-2xl font-bold text-text-primary">{routine?.name} - Session</h1>
+              <p className="text-sm text-text-muted">
                 {completedExercises.size} of {exercises.length} exercises completed
               </p>
             </div>
-            {lastSession && (
+            <div className="flex items-center gap-2 ml-auto">
               <button
-                onClick={repeatLastSession}
-                className="p-2.5 text-white bg-gray-800 hover:bg-gray-700 rounded-lg transition-all duration-200 border border-gray-600 hover:border-gray-500 shadow-lg"
-                title="Repeat last session"
+                onClick={handleSaveSession}
+                disabled={saving}
+                className="btn-primary flex items-center gap-2 disabled:opacity-50"
               >
-                <RotateCcw className="w-5 h-5" />
+                <Save className="w-4 h-4" />
+                {saving ? 'Saving...' : 'Save Session'}
               </button>
-            )}
+            </div>
           </div>
         </div>
-      </motion.header>
+      </header>
 
       {/* Main Content */}
       <main className="px-4 py-6">
-        {/* Progress Bar */}
-        <div className="mb-6">
-          <div className="flex justify-between text-sm text-gray-400 mb-2">
-            <span>Progress</span>
-            <span>{completedExercises.size}/{exercises.length}</span>
+        {exercises.length === 0 ? (
+          <div className="text-center py-16">
+            <div className="w-20 h-20 bg-gradient-to-br from-primary-600/20 to-primary-700/20 rounded-3xl flex items-center justify-center mx-auto mb-6 shadow-lg">
+              <Check className="w-10 h-10 text-primary-400" />
+            </div>
+            <h3 className="text-2xl font-bold text-text-primary mb-3">No exercises in this routine</h3>
+            <p className="text-text-muted mb-8 max-w-md mx-auto leading-relaxed">
+              Add some exercises to your routine before starting a session
+            </p>
+            <button
+              onClick={() => navigate(`/routine/${id}`)}
+              className="btn-primary text-lg px-8 py-4 shadow-xl hover:shadow-2xl transform hover:scale-105 transition-all duration-200"
+            >
+              <ArrowLeft className="w-5 h-5" />
+              Back to Routine
+            </button>
           </div>
-          <div className="w-full bg-gray-800 rounded-full h-2">
-            <motion.div
-              className="bg-white h-2 rounded-full"
-              initial={{ width: 0 }}
-              animate={{ width: `${(completedExercises.size / exercises.length) * 100}%` }}
-              transition={{ duration: 0.3 }}
-            />
-          </div>
-        </div>
-
-        {/* Exercises */}
-        <div className="space-y-4">
-          {exercises.map((exercise, index) => {
-            const isCompleted = completedExercises.has(exercise.id);
-            const exerciseData = sessionData[exercise.id] || {};
-            
-            return (
-              <motion.div
-                key={exercise.id}
-                initial={{ opacity: 0, y: 20 }}
-                animate={{ opacity: 1, y: 0 }}
-                transition={{ delay: 0.1 * index }}
-                className={`card ${isCompleted ? 'bg-green-900/20 border-green-800' : ''}`}
-              >
-                <div className="flex items-center justify-between mb-4">
-                  <div className="flex items-center gap-3">
+        ) : (
+          <div className="space-y-6">
+            {exercises.map((exercise, index) => {
+              const isCompleted = completedExercises.has(exercise.id);
+              const exerciseData = sessionData[exercise.id] || {};
+              
+              return (
+                <div
+                  key={exercise.id}
+                  className={`card transition-all duration-300 border ${
+                    isCompleted 
+                      ? 'border-success-500 bg-success-50/10' 
+                      : 'border-border-secondary hover:border-border-primary'
+                  }`}
+                >
+                  <div className="flex items-center justify-between mb-4">
+                    <div className="flex items-center gap-4">
+                      <button
+                        onClick={() => toggleExerciseComplete(exercise.id)}
+                        className={`w-6 h-6 rounded-full border-2 flex items-center justify-center transition-all ${
+                          isCompleted
+                            ? 'bg-success-500 border-success-500 text-text-primary'
+                            : 'border-border-primary hover:border-success-500'
+                        }`}
+                      >
+                        {isCompleted && <Check className="w-4 h-4" />}
+                      </button>
+                      <div>
+                        <h3 className={`font-bold text-lg ${
+                          isCompleted ? 'text-success-500' : 'text-text-primary'
+                        }`}>
+                          {exercise.name}
+                        </h3>
+                        <p className="text-sm text-text-muted">
+                          {exercise.sets} sets planned
+                        </p>
+                      </div>
+                    </div>
                     <button
-                      onClick={() => toggleExerciseComplete(exercise.id)}
-                      className={`w-7 h-7 rounded-xl border-2 flex items-center justify-center transition-all duration-200 shadow-lg ${
-                        isCompleted
-                          ? 'bg-green-600 border-green-600 text-white hover:bg-green-500 hover:border-green-500'
-                          : 'border-gray-500 hover:border-green-400 hover:bg-green-500/10'
-                      }`}
+                      onClick={() => resetExercise(exercise.id)}
+                      className="p-2 text-text-muted hover:text-text-primary transition-colors"
+                      title="Reset to original values"
                     >
-                      {isCompleted && <Check className="w-5 h-5" />}
+                      <RotateCcw className="w-4 h-4" />
                     </button>
-                    <h3 className="font-semibold text-white">{exercise.name}</h3>
                   </div>
-                  {isCompleted && (
-                    <span className="text-green-400 text-sm font-medium">Completed</span>
-                  )}
-                </div>
 
-                <div className="grid grid-cols-3 gap-4 mb-4">
-                  <div>
-                    <label className="block text-sm font-medium text-gray-300 mb-2">
-                      Sets
-                    </label>
-                    <input
-                      type="number"
-                      min="1"
-                      value={exerciseData.sets || ''}
-                      onChange={(e) => updateExerciseData(exercise.id, 'sets', parseInt(e.target.value) || 1)}
-                      className="input-field w-full"
-                      disabled={isCompleted}
-                    />
+                  <div className="grid grid-cols-2 gap-4">
+                    <div>
+                      <label className="block text-sm font-semibold text-text-secondary mb-2">
+                        Reps
+                      </label>
+                      <input
+                        type="number"
+                        value={exerciseData.reps || ''}
+                        onChange={(e) => updateExerciseData(exercise.id, 'reps', parseInt(e.target.value) || 0)}
+                        className="input-field w-full"
+                        min="0"
+                        disabled={isCompleted}
+                      />
+                    </div>
+                    <div>
+                      <label className="block text-sm font-semibold text-text-secondary mb-2">
+                        Weight (kg)
+                      </label>
+                      <input
+                        type="number"
+                        value={exerciseData.weight || ''}
+                        onChange={(e) => updateExerciseData(exercise.id, 'weight', parseFloat(e.target.value) || 0)}
+                        className="input-field w-full"
+                        min="0"
+                        step="0.5"
+                        disabled={isCompleted}
+                      />
+                    </div>
                   </div>
-                  <div>
-                    <label className="block text-sm font-medium text-gray-300 mb-2">
-                      Reps
-                    </label>
-                    <input
-                      type="number"
-                      min="1"
-                      value={exerciseData.reps || ''}
-                      onChange={(e) => updateExerciseData(exercise.id, 'reps', parseInt(e.target.value) || 1)}
-                      className="input-field w-full"
-                      disabled={isCompleted}
-                    />
-                  </div>
-                  <div>
-                    <label className="block text-sm font-medium text-gray-300 mb-2">
-                      RIR
-                    </label>
-                    <input
-                      type="number"
-                      min="0"
-                      value={exerciseData.rir || ''}
-                      onChange={(e) => updateExerciseData(exercise.id, 'rir', parseInt(e.target.value) || 0)}
-                      className="input-field w-full"
-                      disabled={isCompleted}
-                    />
-                  </div>
-                </div>
 
-                <div className="grid grid-cols-2 gap-4">
-                  <div>
-                    <label className="block text-sm font-medium text-gray-300 mb-2">
-                      Weight (kg)
-                    </label>
-                    <input
-                      type="number"
-                      min="0"
-                      step="0.5"
-                      value={exerciseData.weight || ''}
-                      onChange={(e) => updateExerciseData(exercise.id, 'weight', parseFloat(e.target.value) || 0)}
-                      className="input-field w-full"
-                      disabled={isCompleted}
-                      placeholder="0"
-                    />
+                  <div className="grid grid-cols-2 gap-4 mt-4">
+                    <div>
+                      <label className="block text-sm font-semibold text-text-secondary mb-2">
+                        RIR
+                      </label>
+                      <input
+                        type="number"
+                        value={exerciseData.rir || ''}
+                        onChange={(e) => updateExerciseData(exercise.id, 'rir', parseInt(e.target.value) || 0)}
+                        className="input-field w-full"
+                        min="0"
+                        disabled={isCompleted}
+                      />
+                    </div>
+                    <div>
+                      <label className="block text-sm font-semibold text-text-secondary mb-2">
+                        Sets Completed
+                      </label>
+                      <input
+                        type="number"
+                        value={exerciseData.sets || ''}
+                        onChange={(e) => updateExerciseData(exercise.id, 'sets', parseInt(e.target.value) || 0)}
+                        className="input-field w-full"
+                        min="0"
+                        max={exercise.sets}
+                        disabled={isCompleted}
+                      />
+                    </div>
                   </div>
-                  <div>
-                    <label className="block text-sm font-medium text-gray-300 mb-2">
+
+                  <div className="mt-4">
+                    <label className="block text-sm font-semibold text-text-secondary mb-2">
                       Notes
                     </label>
-                    <input
-                      type="text"
+                    <textarea
                       value={exerciseData.notes || ''}
                       onChange={(e) => updateExerciseData(exercise.id, 'notes', e.target.value)}
-                      className="input-field w-full"
+                      className="input-field w-full h-20 resize-none"
+                      placeholder="How did it feel? Any adjustments needed?"
                       disabled={isCompleted}
-                      placeholder="Optional notes..."
                     />
                   </div>
                 </div>
-              </motion.div>
-            );
-          })}
-        </div>
-
-        {/* Save Session Button */}
-        <motion.div
-          initial={{ opacity: 0, y: 20 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ delay: 0.3 }}
-          className="mt-8"
-        >
-          <button
-            onClick={saveSession}
-            disabled={saving || !allExercisesCompleted}
-            className={`w-full py-4 rounded-2xl font-semibold text-lg transition-all duration-200 flex items-center justify-center gap-3 shadow-lg ${
-              allExercisesCompleted
-                ? 'bg-white text-gray-900 hover:bg-gray-100 active:scale-95 hover:shadow-xl transform hover:scale-105'
-                : 'bg-gray-800 text-gray-500 cursor-not-allowed border border-gray-700'
-            }`}
-          >
-            {saving ? (
-              <div className="w-5 h-5 border-2 border-gray-900 border-t-transparent rounded-full animate-spin" />
-            ) : (
-              <>
-                <Save className="w-5 h-5" />
-                {allExercisesCompleted ? 'Save Session' : `Complete ${exercises.length - completedExercises.size} more exercises`}
-              </>
-            )}
-          </button>
-        </motion.div>
+              );
+            })}
+          </div>
+        )}
       </main>
     </div>
   );
